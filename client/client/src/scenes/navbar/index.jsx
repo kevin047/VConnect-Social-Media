@@ -22,6 +22,7 @@ import {
     Close,
 } from "@mui/icons-material";
 
+
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "../../state";
 import { useNavigate } from "react-router-dom";
@@ -41,8 +42,8 @@ function Navbar() {
     const primaryLight = theme.palette.primary.light;
     const alt = theme.palette.background.alt;
 
-    // const fullName = `${user.firstName} ${user.lastName}`;
-    const fullName = `Kevin47_`;
+    const fullName = `${user.firstName} ${user.lastName}`;
+    // const fullName = `Kevin47_`;
 
     return (
         <FlexBetween padding="1rem 6%" backgroundColor={alt}>

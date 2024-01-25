@@ -37,40 +37,70 @@ export const getFeedPosts = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
     try {
-        const { userId } = req.params;
-        const post = await Post.find({ userId });
+        const { id } = req.params;
+        console.log(req.params, "hello");
+        const post = await Post.find({ userId: id });
         res.status(200).json(post);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
 };
 
-
 // Update
 
-export const likePost = async (req,res)=>{
-    try{
+export const likePost = async (req, res) => {
+    try {
         const { id } = req.params;
         const { userId } = req.body;
         const post = await Post.findById(id);
         const isLiked = post.likes.get(userId);
 
-        if(isLiked){
+        if (isLiked) {
             post.likes.delete(userId);
-        }
-        else{
+        } else {
             post.likes.set(userId, true);
         }
 
         const updatedPost = await Post.findByIdAndUpdate(
-            id, 
+            id,
             { likes: post.likes },
-            {new:true}
+            { new: true }
         );
 
         res.status(200).json(updatedPost);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
     }
-    catch(err){
-        res.status(404).json({message: err.message});
+};
+
+export const addComment = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { userId, commentText } = req.body;
+        const post = await Post.findById(id);
+        console.log('hey');
+
+        // if (post.comments && typeof post.comments === 'object') {
+        //     console.log('Before', post.comments)
+        //     post.comments = [post.comments];
+        //     console.log('After', post.comments)
+        // }
+
+        const updatedPost = await Post.findByIdAndUpdate(
+            id,
+            {
+                $push: {
+                    comments: {
+                        userId: userId,
+                        commentText: commentText,
+                    },
+                },
+            },
+            { new: true }
+        );
+
+        res.status(200).json(updatedPost);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
     }
-}
+};
